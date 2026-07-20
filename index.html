@@ -93,33 +93,6 @@
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 90%);
   }
 
-  /* ---------- custom cursor (signature element) ---------- */
-  .cursor-dot, .cursor-coords{
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 999;
-    transform: translate(-50%,-50%);
-    will-change: transform;
-  }
-  .cursor-dot{
-    width: 8px; height: 8px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-  }
-  .cursor-coords{
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--accent);
-    white-space: nowrap;
-    padding-left: 14px;
-    padding-top: 10px;
-    letter-spacing: .02em;
-  }
-  @media (hover: none), (pointer: coarse){
-    .cursor-dot, .cursor-coords{ display: none; }
-  }
-
   /* ---------- header / nav ---------- */
   header{
     position: sticky;
