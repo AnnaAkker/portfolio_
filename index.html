@@ -4,15 +4,19 @@
   ПОРТФОЛИО — как редактировать этот файл
   ===========================================================================
   1. Имя, роль, био — секция HERO (ищи комментарий "HERO / ОБО МНЕ").
-  2. Кейсы — массив CASES в конце файла (тег <script>). Для каждого кейса:
+  2. Карьерная шкала — массив CAREER в конце файла: годы, компания,
+     должность и обязанности во всплывающей карточке.
+  3. Кейсы — массив CASES в конце файла (тег <script>). Для каждого кейса:
      title, tags, dims, summary (текст на карточке), role/period/tools (мета
      в открытой карточке), body (абзацы полного описания), images (сколько
      плейсхолдеров показать в галерее — замени div.gal-ph на свои <img>).
-  3. Хобби — секция "ВНЕ ХОЛСТА", список <li> с текстом.
-  4. Резюме — секция ниже, вкладка "resume": опыт, навыки, образование,
+  4. Хобби — секция "ВНЕ ХОЛСТА": список .layer-item, каждый со своим
+     .layer-row (текст в .lname) и раскрывающейся галереей из 3-4 фото
+     (.layer-photos — замени div.layer-ph на свои <img>).
+  5. Резюме — секция ниже, вкладка "resume": опыт, навыки, образование,
      языки, контакты, ссылка на PDF (кнопка "Скачать PDF" — вставь свою
      ссылку в href).
-  5. Контакты в футере и в резюме — замени почту/телеграм/behance на свои.
+  6. Контакты в футере и в резюме — замени почту/телеграм/behance на свои.
   ===========================================================================
 -->
 <html lang="ru">
@@ -39,6 +43,7 @@
     --display: 'Helvetica', sans-serif;
     --body: 'Helvetica', sans-serif;
     --mono: 'Helvetica', sans-serif;
+    --line: #2a2c32;
   }
 
   *{ box-sizing: border-box; }
@@ -46,6 +51,7 @@
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior: auto; }
     *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    .scroll-reveal, .hero-intro, .scroll-cue{ opacity: 1 !important; transform: none !important; }
   }
 
   body{
@@ -67,6 +73,18 @@
   :focus-visible{
     outline: 2px solid var(--accent);
     outline-offset: 3px;
+  }
+
+  .sr-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .wrap{
@@ -145,9 +163,13 @@
   /* ---------- HERO / ОБО МНЕ ---------- */
   .hero{
     position: relative;
-    padding: 96px 0 72px;
+    min-height: calc(100svh - 64px);
+    padding: 72px 0 88px;
     border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
   }
+  .hero > .wrap{ width: 100%; }
   .frame-tag{
     font-family: var(--mono);
     font-size: 11px;
@@ -178,6 +200,60 @@
     font-style: normal;
     color: var(--accent);
   }
+  .type-title{ min-height: 2.1em; }
+  .type-line{ display: block; min-height: 1.05em; }
+  .type-caret{
+    display: inline-block;
+    width: .08em;
+    height: .86em;
+    margin-left: .08em;
+    background: currentColor;
+    vertical-align: -.04em;
+    animation: caret-blink .8s steps(1, end) infinite;
+  }
+  .type-caret.done{ animation-duration: 1.15s; opacity: .7; }
+  @keyframes caret-blink{ 0%, 48%{ opacity: 1; } 49%, 100%{ opacity: 0; } }
+
+  .hero-intro{
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .hero.typing-complete .hero-intro{ opacity: 1; transform: none; }
+
+  .scroll-cue{
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    opacity: 0;
+    transition: opacity .45s ease .15s;
+  }
+  .hero.typing-complete .scroll-cue{ opacity: 1; }
+  .scroll-cue::after{
+    content: '';
+    width: 34px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    animation: scroll-line 1.6s ease-in-out infinite;
+  }
+  @keyframes scroll-line{ 0%, 100%{ transform: scaleX(.25); opacity: .35; } 50%{ transform: scaleX(1); opacity: 1; } }
+
+  .scroll-reveal{
+    opacity: 0;
+    transform: translateY(44px);
+    transition: opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1);
+  }
+  .scroll-reveal.in-view{ opacity: 1; transform: none; }
   .hero p.lede{
     font-size: 16px;
     color: var(--text-dim);
@@ -255,6 +331,107 @@
     max-width: 44ch;
     margin: 0;
     font-size: 14px;
+  }
+
+  /* ---------- career timeline (vertical, без скролла) ---------- */
+  .career-section{
+    background:
+      linear-gradient(90deg, transparent, rgba(250,65,24,.035) 50%, transparent),
+      var(--bg);
+  }
+  section.block.career-section{ padding-bottom: 96px; }
+  .career-head{ margin-bottom: 34px; }
+  .career-head .block-eyebrow{ margin-bottom: 8px; }
+
+  .career-timeline{
+    position: relative;
+    max-width: 720px;
+  }
+  .career-line{
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: repeating-linear-gradient(180deg, var(--line) 0 8px, transparent 8px 14px);
+  }
+  .career-line-progress{
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    width: 1px;
+    height: calc(100% - 12px);
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1.05s cubic-bezier(.22,1,.36,1) .18s;
+    box-shadow: 0 0 18px rgba(250,65,24,.28);
+  }
+  .career-section.in-view .career-line-progress{ transform: scaleY(1); }
+
+  .career-node{
+    position: relative;
+    padding: 0 0 40px 38px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .career-section.in-view .career-node{
+    opacity: 1;
+    transform: none;
+    transition-delay: var(--delay);
+  }
+  .career-node:last-child{ padding-bottom: 0; }
+  .career-point{
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    background: var(--bg);
+    cursor: default;
+  }
+  .career-point::before{
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .career-year{
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .career-company{
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 2px;
+  }
+  .career-role{
+    color: var(--text-dim);
+    font-size: 13px;
+    margin: 0 0 10px;
+  }
+  .career-duties{
+    color: #c7c8cc;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0;
+  }
+  @media (max-width: 560px){
+    .career-company{ font-size: 17px; }
+    .career-duties{ font-size: 13.5px; }
   }
 
   /* ---------- case grid ---------- */
@@ -375,16 +552,23 @@
     border-radius: var(--radius);
     overflow: hidden;
   }
+  .layer-item{
+    border-bottom: 1px solid var(--line);
+  }
+  .layer-item:last-child{ border-bottom: none; }
   .layer-row{
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--line);
+    border: none;
     background: var(--bg);
+    color: inherit;
+    font: inherit;
+    text-align: left;
     transition: background .15s;
   }
-  .layer-row:last-child{ border-bottom: none; }
   .layer-row:hover{ background: var(--bg-elev); }
   .layer-row svg{ flex-shrink: 0; color: var(--text-faint); }
   .layer-row .lname{ font-size: 15px; }
@@ -395,6 +579,47 @@
     color: var(--text-faint);
     text-transform: uppercase;
     letter-spacing: .04em;
+  }
+  .layer-chevron{
+    flex-shrink: 0;
+    color: var(--text-faint);
+    transition: transform .25s ease, color .15s;
+  }
+  .layer-item.is-open .layer-chevron{ transform: rotate(180deg); color: var(--accent); }
+
+  .layer-panel{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .35s ease;
+  }
+  .layer-item.is-open .layer-panel{ grid-template-rows: 1fr; }
+  .layer-panel-inner{ overflow: hidden; }
+  .layer-photos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 2px 20px 20px;
+  }
+  .layer-ph{
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius);
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 2px, transparent 2px 10px),
+      linear-gradient(155deg, var(--c1), var(--c2));
+    display: flex;
+    align-items: flex-end;
+    padding: 8px;
+  }
+  .layer-ph span{
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255,255,255,.85);
+    background: rgba(0,0,0,.35);
+    padding: 3px 7px;
+    border-radius: 2px;
+  }
+  @media (max-width: 640px){
+    .layer-photos{ grid-template-columns: repeat(2, 1fr); }
   }
 
   /* ---------- footer ---------- */
@@ -671,21 +896,43 @@
   <div class="view active" id="view-home">
 
     <!-- HERO / ОБО МНЕ -->
-    <section class="hero">
+    <section class="hero" id="hero">
       <div class="wrap">
-        <h1><em>Привет!</em><br>Поработаем?</h1>
-        <p class="lede">
-          Я коммуникационный дизайнер с опытом 7+ лет в агентствах и с крупными брендами — от ключевых визуалов и digital-кампаний до печатной продукции и видео. Руковожу отделом дизайна, отвечаю за арт-дирекшен проектов и активно использую нейросети, чтобы ускорять процессы без потери качества. Среди клиентов — IQOS, МТС, ОТП Банк и Procter & Gamble
-        </p>
-        <div class="hero-actions">
-          <a class="btn primary" href="#cases">Смотреть кейсы</a>
-          <a class="btn" href="https://t.me/AAkker">Связаться со мной</a>
+        <h1 class="type-title" aria-label="Привет! Поработаем?">
+          <span class="type-line"><em id="typedGreeting" aria-hidden="true"></em></span>
+          <span class="type-line"><span id="typedQuestion" aria-hidden="true"></span><span class="type-caret" id="typeCaret" aria-hidden="true"></span></span>
+        </h1>
+        <div class="hero-intro">
+          <p class="lede">
+            Я коммуникационный дизайнер с опытом 7+ лет в агентствах и с крупными брендами — от ключевых визуалов и digital-кампаний до печатной продукции и видео. Руковожу отделом дизайна, отвечаю за арт-дирекшен проектов и активно использую нейросети, чтобы ускорять процессы без потери качества. Среди клиентов — IQOS, МТС, ОТП Банк и Procter & Gamble
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#cases">Смотреть кейсы</a>
+            <a class="btn" href="https://t.me/AAkker">Связаться со мной</a>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">Scroll</div>
+    </section>
+
+    <!-- КАРЬЕРНАЯ ШКАЛА -->
+    <section class="block career-section scroll-reveal" id="career" aria-labelledby="careerTitle">
+      <div class="wrap">
+        <div class="block-head career-head">
+          <div>
+            <p class="block-eyebrow">Experience timeline</p>
+            <h2 id="careerTitle">Где я работала</h2>
+          </div>
+          <p>Компании, роли и задачи — от первых проектов до сегодняшнего дня.</p>
+        </div>
+        <div class="career-timeline" id="careerTimeline" aria-label="Опыт работы">
+          <!-- рендерится через JS -->
         </div>
       </div>
     </section>
 
     <!-- CASES -->
-    <section class="block" id="cases">
+    <section class="block scroll-reveal" id="cases">
       <div class="wrap">
         <div class="block-head">
           <div>
@@ -698,7 +945,7 @@
     </section>
 
     <!-- ВНЕ ХОЛСТА / ХОББИ -->
-    <section class="block">
+    <section class="block scroll-reveal">
       <div class="wrap">
         <div class="block-head">
           <div>
@@ -708,32 +955,84 @@
           <p>Слои, которые не попадают в бриф, но многое обо мне объясняют.</p>
         </div>
         <div class="layers" id="hobbiesList">
-          <!-- Замени текст в .lname на свои хобби -->
-          <div class="layer-row">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8C1 8 4 3 8 3C12 3 15 8 15 8C15 8 12 13 8 13C4 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
-            <span class="lname">Плёночная фотография</span>
-            <span class="ltag">layer_04</span>
+          <!-- Каждый layer-item — своя категория. Замени текст в .lname,
+               и в .layer-photos — вместо div.layer-ph подставь свои <img>.
+               Можно оставить 3 или 4 фото на категорию. -->
+          <div class="layer-item">
+            <button class="layer-row" aria-expanded="false" aria-controls="layerPanel-1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8C1 8 4 3 8 3C12 3 15 8 15 8C15 8 12 13 8 13C4 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+              <span class="lname">Плёночная фотография</span>
+              <span class="ltag">layer_04</span>
+              <svg class="layer-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="layer-panel" id="layerPanel-1">
+              <div class="layer-panel-inner">
+                <div class="layer-photos">
+                  <div class="layer-ph" style="--c1:#4a3b2e;--c2:#1c150f"><span>IMG_01</span></div>
+                  <div class="layer-ph" style="--c1:#3e4a3b;--c2:#141b12"><span>IMG_02</span></div>
+                  <div class="layer-ph" style="--c1:#4a3e3b;--c2:#1b1512"><span>IMG_03</span></div>
+                  <div class="layer-ph" style="--c1:#3b4048;--c2:#12151b"><span>IMG_04</span></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="layer-row">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V3L14 3V13L8 9L2 13Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            <span class="lname">Коллекционирую виниловые пластинки</span>
-            <span class="ltag">layer_03</span>
+          <div class="layer-item">
+            <button class="layer-row" aria-expanded="false" aria-controls="layerPanel-2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V3L14 3V13L8 9L2 13Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <span class="lname">Коллекционирую виниловые пластинки</span>
+              <span class="ltag">layer_03</span>
+              <svg class="layer-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="layer-panel" id="layerPanel-2">
+              <div class="layer-panel-inner">
+                <div class="layer-photos">
+                  <div class="layer-ph" style="--c1:#4d3a6b;--c2:#1c1533"><span>IMG_01</span></div>
+                  <div class="layer-ph" style="--c1:#3a466b;--c2:#141a33"><span>IMG_02</span></div>
+                  <div class="layer-ph" style="--c1:#6b3a5a;--c2:#331526"><span>IMG_03</span></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="layer-row">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L9.8 6H15L10.6 9.2L12.4 14L8 11L3.6 14L5.4 9.2L1 6H6.2L8 1Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
-            <span class="lname">Скалолазание по выходным</span>
-            <span class="ltag">layer_02</span>
+          <div class="layer-item">
+            <button class="layer-row" aria-expanded="false" aria-controls="layerPanel-3">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L9.8 6H15L10.6 9.2L12.4 14L8 11L3.6 14L5.4 9.2L1 6H6.2L8 1Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+              <span class="lname">Скалолазание по выходным</span>
+              <span class="ltag">layer_02</span>
+              <svg class="layer-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="layer-panel" id="layerPanel-3">
+              <div class="layer-panel-inner">
+                <div class="layer-photos">
+                  <div class="layer-ph" style="--c1:#2f4d3a;--c2:#122016"><span>IMG_01</span></div>
+                  <div class="layer-ph" style="--c1:#4d4530;--c2:#201c12"><span>IMG_02</span></div>
+                  <div class="layer-ph" style="--c1:#30454d;--c2:#121b20"><span>IMG_03</span></div>
+                  <div class="layer-ph" style="--c1:#454d30;--c2:#1b2012"><span>IMG_04</span></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="layer-row">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M2 6H14M6 6V14" stroke="currentColor" stroke-width="1.2"/></svg>
-            <span class="lname">Развожу растения на подоконнике-теплице</span>
-            <span class="ltag">layer_01</span>
+          <div class="layer-item">
+            <button class="layer-row" aria-expanded="false" aria-controls="layerPanel-4">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M2 6H14M6 6V14" stroke="currentColor" stroke-width="1.2"/></svg>
+              <span class="lname">Развожу растения на подоконнике-теплице</span>
+              <span class="ltag">layer_01</span>
+              <svg class="layer-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="layer-panel" id="layerPanel-4">
+              <div class="layer-panel-inner">
+                <div class="layer-photos">
+                  <div class="layer-ph" style="--c1:#3a5c3e;--c2:#132116"><span>IMG_01</span></div>
+                  <div class="layer-ph" style="--c1:#5c5a3a;--c2:#211f12"><span>IMG_02</span></div>
+                  <div class="layer-ph" style="--c1:#3a4c5c;--c2:#121a21"><span>IMG_03</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <footer>
+    <footer class="scroll-reveal">
       <div class="wrap foot-row">
         <div>© <span id="year"></span> Имя Фамилия</div>
         <div class="foot-links">
@@ -875,6 +1174,51 @@
 
 <script>
 /* =============================================================
+   КАРЬЕРНАЯ ШКАЛА — замени данные на свои
+   period — год или диапазон, company — компания, role — должность,
+   duties — подробности во всплывающем окне.
+   ============================================================= */
+const CAREER = [
+  {
+    period: '2019 — 2021',
+    company: 'Разные клиенты',
+    role: 'Graphic designer · freelance',
+    duties: 'Айдентика, полиграфия и дизайн для социальных сетей. Вела проекты от первых концепций до подготовки финальных материалов для печати и digital-размещений.'
+  },
+  {
+    period: '2021 — 2023',
+    company: 'Название компании',
+    role: 'UI / UX designer',
+    duties: 'Проектировала интерфейсы мобильного приложения, собирала интерактивные прототипы и проводила юзабилити-тестирования, превращая результаты исследований в улучшения продукта.'
+  },
+  {
+    period: '2023 — сейчас',
+    company: 'Название компании',
+    role: 'Product designer',
+    duties: 'Веду дизайн ключевых пользовательских сценариев, отвечаю за визуальное качество продукта, собираю и поддерживаю дизайн-систему и синхронизирую работу с командой разработки.'
+  }
+];
+
+const escapeHTML = (value) => String(value).replace(/[&<>'"]/g, (char) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+}[char]));
+
+const careerTimeline = document.getElementById('careerTimeline');
+careerTimeline.innerHTML = `
+  <div class="career-line" aria-hidden="true"></div>
+  <div class="career-line-progress" aria-hidden="true"></div>
+  ${CAREER.map((item, index) => `
+    <article class="career-node" style="--delay:${.15 + index * .12}s">
+      <span class="career-point" aria-hidden="true"></span>
+      <span class="career-year">${escapeHTML(item.period)}</span>
+      <h3 class="career-company">${escapeHTML(item.company)}</h3>
+      <p class="career-role">${escapeHTML(item.role)}</p>
+      <p class="career-duties">${escapeHTML(item.duties)}</p>
+    </article>
+  `).join('')}
+`;
+
+/* =============================================================
    ДАННЫЕ КЕЙСОВ — редактируй этот массив
    c1 / c2 — цвета градиента плейсхолдера превью (замени на свои
    картинки: в .case-thumb и .gal-ph подставь <img> вместо div)
@@ -978,11 +1322,49 @@ grid.innerHTML = CASES.map((c, i) => `
   </button>
 `).join('');
 
-/* карточки плавно появляются при скролле */
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
-}, { threshold: .15 });
-document.querySelectorAll('.case-card').forEach(el => io.observe(el));
+/* ---------------- печатающийся заголовок первого экрана ---------------- */
+const hero = document.getElementById('hero');
+const typedGreeting = document.getElementById('typedGreeting');
+const typedQuestion = document.getElementById('typedQuestion');
+const typeCaret = document.getElementById('typeCaret');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function typeText(element, text, speed = 65){
+  for (const char of Array.from(text)) {
+    element.textContent += char;
+    await wait(speed);
+  }
+}
+
+async function runHeroTyping(){
+  if (reduceMotion) {
+    typedGreeting.textContent = 'Привет!';
+    typedQuestion.textContent = 'Поработаем?';
+  } else {
+    await wait(280);
+    await typeText(typedGreeting, 'Привет!', 72);
+    await wait(180);
+    await typeText(typedQuestion, 'Поработаем?', 68);
+  }
+
+  typeCaret.classList.add('done');
+  hero.classList.add('typing-complete');
+}
+
+runHeroTyping();
+
+/* секции и карточки появляются только при входе во viewport */
+const io = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('in-view');
+    observer.unobserve(entry.target);
+  });
+}, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+
+document.querySelectorAll('.scroll-reveal, .case-card').forEach(el => io.observe(el));
 
 /* ---------------- overlay: открытие кейса ---------------- */
 const overlay = document.getElementById('overlay');
@@ -1072,7 +1454,7 @@ navButtons.forEach(btn => {
 /* ---------------- курсор-координаты (фирменный элемент) ---------------- */
 const dot = document.getElementById('cursorDot');
 const coords = document.getElementById('cursorCoords');
-if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+if (dot && coords && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   window.addEventListener('mousemove', (e) => {
     dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
     coords.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
@@ -1081,6 +1463,16 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 }
 
 document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------------- аккордеон блока "Для души" ---------------- */
+document.querySelectorAll('#hobbiesList .layer-row').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.layer-item');
+    const willOpen = !item.classList.contains('is-open');
+    item.classList.toggle('is-open', willOpen);
+    btn.setAttribute('aria-expanded', String(willOpen));
+  });
+});
 </script>
 </body>
 </html>
