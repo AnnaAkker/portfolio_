@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anna Akker — Арт директор, коммуникационный дизайнер</title>
+<title>Anna Akker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,7 +28,6 @@
     --bg: #111214;
     --bg-elev: #17181c;
     --bg-elev-2: #1d1f24;
-    --line: #2a2c32;
     --line-soft: #202226;
     --text: #f3f2ee;
     --text-dim: #9497a1;
@@ -38,8 +37,8 @@
     --accent-contrast: #0a0e1a;
     --radius: 2px;
     --display: 'Helvetica', sans-serif;
-    --body: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
+    --body: 'Helvetica', sans-serif;
+    --mono: 'Helvetica', sans-serif;
   }
 
   *{ box-sizing: border-box; }
@@ -80,18 +79,6 @@
   }
 
   /* ---------- decorative background grid ---------- */
-  .blueprint{
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background-image:
-      linear-gradient(var(--line-soft) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size: 64px 64px;
-    opacity: .35;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 90%);
-  }
 
   /* ---------- header / nav ---------- */
   header{
@@ -127,7 +114,7 @@
     display: flex;
     gap: 4px;
     background: var(--bg-elev);
-    border: 1px solid var(--line);
+    border: 2px solid var(--line);
     border-radius: var(--radius);
     padding: 3px;
   }
@@ -140,7 +127,7 @@
     letter-spacing: .04em;
     text-transform: uppercase;
     padding: 7px 14px;
-    border-radius: 1px;
+    border-radius: 2px;
     transition: color .15s, background .15s;
   }
   .navlinks button.active{
@@ -192,7 +179,7 @@
     color: var(--accent);
   }
   .hero p.lede{
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-dim);
     max-width: 56ch;
     margin: 0 0 32px;
@@ -214,7 +201,7 @@
     align-items: center;
     gap: 8px;
     transition: transform .15s, background .15s, border-color .15s;
-    border: 1px solid var(--line);
+    border: 1px solid #2a2c32;
     background: transparent;
     color: var(--text);
   }
@@ -666,13 +653,11 @@
 </head>
 <body>
 
-<div class="blueprint" aria-hidden="true"></div>
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-coords" id="cursorCoords" aria-hidden="true">X 000 · Y 000</div>
+
 
 <header>
   <div class="wrap nav">
-    <div class="mark">Имя Фамилия <span>/ UI &amp; graphic</span></div>
+    <div class="mark">Anna Akker <span>/ Art direction &amp; communication designer</span></div>
     <nav class="navlinks" role="tablist" aria-label="Разделы сайта">
       <button type="button" class="active" data-view="home" role="tab" aria-selected="true">Портфолио</button>
       <button type="button" data-view="resume" role="tab" aria-selected="false">Резюме</button>
@@ -688,22 +673,14 @@
     <!-- HERO / ОБО МНЕ -->
     <section class="hero">
       <div class="wrap">
-        <div class="frame-tag">Frame — About / 001</div>
-        <h1>Проектирую интерфейсы,<br>которым <em>доверяют</em>.</h1>
+        <h1><em>Привет!</em><br>Поработаем?</h1>
         <p class="lede">
-          Меня зовут Имя Фамилия. Я UI/graphic-дизайнер с опытом в продуктовом
-          дизайне, айдентике и дизайн-системах. Здесь — четыре кейса, которые
-          показывают, как я думаю и как довожу идею до рабочего интерфейса.
+          Я коммуникационный дизайнер с опытом 7+ лет в агентствах и с крупными брендами — от ключевых визуалов и digital-кампаний до печатной продукции и видео. Руковожу отделом дизайна, отвечаю за арт-дирекшен проектов и активно использую нейросети, чтобы ускорять процессы без потери качества. Среди клиентов — IQOS, МТС, ОТП Банк и Procter & Gamble
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#cases">Смотреть кейсы</a>
-          <a class="btn" href="mailto:you@example.com">Написать мне</a>
+          <a class="btn" href="https://t.me/AAkker">Связаться со мной</a>
         </div>
-      </div>
-      <div class="hero-coords">
-        X 1440&nbsp;&nbsp;Y 1024<br>
-        SCALE 100%<br>
-        MSK, UTC+3
       </div>
     </section>
 
@@ -712,7 +689,6 @@
       <div class="wrap">
         <div class="block-head">
           <div>
-            <p class="block-eyebrow">Selected work</p>
             <h2>Кейсы</h2>
           </div>
           <p>Нажми на карточку — откроется полное описание проекта с изображениями.</p>
@@ -727,7 +703,7 @@
         <div class="block-head">
           <div>
             <p class="block-eyebrow">Off-canvas</p>
-            <h2>Вне холста</h2>
+            <h2>Для души</h2>
           </div>
           <p>Слои, которые не попадают в бриф, но многое обо мне объясняют.</p>
         </div>
