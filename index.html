@@ -43,10 +43,10 @@
     --text-faint: #8f8c80;
     --line: #d8d3c4;
     --accent: #fa4118;
-    --display: 'Space Grotesk', sans-serif;
-    --body: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-    --accent-font: 'Playfair Display', serif;
+    --display: 'Helvetica', sans-serif;
+    --body: 'Helvetica', sans-serif;
+    --mono: 'Helvetica', monospace;
+    --accent-font: 'Helvetica', serif;
   }
 
   *{ box-sizing: border-box; }
@@ -68,7 +68,7 @@
   ::selection{ background: var(--accent); color: #fff; }
   a{ color: inherit; }
 
-  .wrap{ max-width: 1400px; margin: 0 auto; padding: 0 32px; }
+  .wrap{ max-width: 1920px; margin: 0 auto; padding: 0 32px; }
   @media (max-width: 640px){ .wrap{ padding: 0 20px; } }
 
   /* ---------------- мини-навигация над заголовком ---------------- */
@@ -107,8 +107,6 @@
     justify-content: space-between;
     gap: 16px;
     margin-top: 40px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
   }
   .tabs a{
     position: relative;
@@ -316,13 +314,6 @@
 
 <main>
   <section class="hero wrap" id="hero">
-    <!-- Мини-навигация: замени ссылки/подписи на свои -->
-    <nav class="mininav" aria-label="Быстрые ссылки">
-      <a href="#work">Работы</a>
-      <a href="#about">Обо мне</a>
-      <a href="#clients">Клиенты</a>
-    </nav>
-
     <!-- Заголовок: замени имя и роль -->
     <h1>Я — <u>Имя Фамилия</u><br>Профессия / роль.</h1>
 
@@ -345,10 +336,6 @@
   <!-- Мозаика избранных работ: замени div.tile-ph на свои <img> -->
   <section class="work-featured" id="work" aria-label="Избранные работы"></section>
 
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track" id="marqueeTop"></div>
-  </div>
-
   <!-- Обо мне -->
   <section class="info-section" id="about">
     <div class="wrap">
@@ -356,36 +343,6 @@
       <p class="about-text">Здесь текст о том, кто ты и как работаешь — 2–4 коротких предложения, без длинного резюме.</p>
     </div>
   </section>
-
-  <!-- Клиенты -->
-  <section class="info-section" id="clients">
-    <div class="wrap">
-      <p class="eyebrow">Клиенты</p>
-      <ul class="client-list">
-        <li>Клиент один</li>
-        <li>Клиент два</li>
-        <li>Клиент три</li>
-        <li>Клиент четыре</li>
-        <li>Клиент пять</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Доступность -->
-  <section class="info-section" id="availability" style="border-bottom:none;">
-    <div class="wrap">
-      <p class="eyebrow">Доступность</p>
-      <p class="availability-text">Короткая строка о текущей загрузке — свободна с такого-то месяца / беру проекты уже сейчас.</p>
-      <a class="contact-link" href="mailto:mail@example.com">Написать →</a>
-    </div>
-  </section>
-
-  <!-- Единая галерея "Все работы": замени div.tile-ph на свои <img> -->
-  <section class="work-all" id="allwork" aria-label="Все работы"></section>
-
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track" id="marqueeBottom"></div>
-  </div>
 
   <footer>
     <a class="all-work-link" href="#work">Все работы</a>
@@ -414,24 +371,6 @@ const WORK_FEATURED = [
 ];
 
 /* -------- вся галерея работ: та же логика, без span (сетка ровная) -------- */
-const WORK_ALL = [
-  { dims: '1200 × 1200', c1: '#4a3b2e', c2: '#1c150f' },
-  { dims: '1200 × 1200', c1: '#3e4a3b', c2: '#141b12' },
-  { dims: '1200 × 1200', c1: '#4a3e3b', c2: '#1b1512' },
-  { dims: '1200 × 1200', c1: '#3b4048', c2: '#12151b' },
-  { dims: '1200 × 1200', c1: '#4d3a6b', c2: '#1c1533' },
-  { dims: '1200 × 1200', c1: '#3a466b', c2: '#141a33' },
-  { dims: '1200 × 1200', c1: '#6b3a5a', c2: '#331526' },
-  { dims: '1200 × 1200', c1: '#2f4d3a', c2: '#122016' },
-  { dims: '1200 × 1200', c1: '#4d4530', c2: '#201c12' },
-  { dims: '1200 × 1200', c1: '#30454d', c2: '#121b20' },
-  { dims: '1200 × 1200', c1: '#454d30', c2: '#1b2012' },
-  { dims: '1200 × 1200', c1: '#3a5c3e', c2: '#132116' },
-  { dims: '1200 × 1200', c1: '#5c5a3a', c2: '#211f12' },
-  { dims: '1200 × 1200', c1: '#3a4c5c', c2: '#121a21' },
-  { dims: '1200 × 1200', c1: '#5c3a3a', c2: '#211212' },
-  { dims: '1200 × 1200', c1: '#3a5c5c', c2: '#122121' },
-];
 
 function renderTiles(container, list, withSpan){
   container.innerHTML = list.map((t, i) => `
@@ -443,11 +382,6 @@ function renderTiles(container, list, withSpan){
 renderTiles(document.getElementById('work'), WORK_FEATURED, true);
 renderTiles(document.getElementById('allwork'), WORK_ALL, false);
 
-/* бегущие строки, продублированы для бесшовной прокрутки */
-const marqueeItem = `<span>Все работы <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 3L11 11M11 11V4M11 11H4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-const marqueeContent = Array(10).fill(marqueeItem).join('');
-document.getElementById('marqueeTop').innerHTML = marqueeContent;
-document.getElementById('marqueeBottom').innerHTML = marqueeContent;
 </script>
 </body>
 </html>
